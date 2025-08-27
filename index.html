@@ -144,11 +144,12 @@
   </div>
   
     <div id="BUILDING_OVERVIEW" class="glass-modal">
-      <img src="https://lh3.googleusercontent.com/d/1sdr4eqjWoS3uhvOfdYQjUsRAbXImMHSY"
+      <img id="modalImg"
+           src=""
+           alt="ภาพจากกล้อง"
            style="max-width:100%; height:auto; border-radius:16px;" />
       <button class="close-btn" onclick="closeLogistics('BUILDING_OVERVIEW')">❌</button>
     </div>
-
 
   <script>
     const iframe = document.getElementById('skfb-frame');
@@ -170,9 +171,32 @@
             const row = rows[i].c;
             if (row[0] && row[0].v === cameraId) {
               // กล้อง 1
-              const img1 = row[2]?.v || 'ไม่พบข้อมูล';
               const text1 = row[3]?.v || 'ไม่พบข้อมูล';
+              
+              
+              
+              const img1 = row[2]?.v || 'ไม่พบข้อมูล';
               document.getElementById("infoBox").innerHTML = `<img src="${img1}" alt="ภาพจากกล้อง">`;
+              
+            // ✅ อัปเดตรูปในโมดอลให้ตรงกับ img1
+            const modalImg = document.getElementById("modalImg");
+            if (modalImg && img1) {
+              modalImg.src = img1;
+            
+              // (ออปชัน) ปรับขนาดกรอบโมดอลให้พอดีกับขนาดรูปจริง
+              // เมื่อรูปโหลดเสร็จ คำนวณขนาดจาก naturalWidth/Height
+              modalImg.onload = () => {
+                const wrap = document.getElementById("BUILDING_OVERVIEW");
+                if (!wrap) return;
+                // จำกัดความกว้าง/สูงไม่เกินขนาดจอ (เผื่อรูปใหญ่มาก)
+                const maxW = Math.min(modalImg.naturalWidth, window.innerWidth - 40);
+                const maxH = Math.min(modalImg.naturalHeight, window.innerHeight - 100);
+                wrap.style.width  = maxW + "px";
+                wrap.style.height = "auto";
+              };
+            }
+              
+              
               document.getElementById("infoBox2").innerText = text1;
 
               // กล้อง 2
@@ -210,6 +234,7 @@
                 CameraName = annotation.name;
                 document.getElementById('cameraNameBox').innerText = 'กล้อง ' + CameraName;
                 openLogistics('BUILDING_OVERVIEW');
+                
                 getTextFromGoogleSheet(CameraName);
               }
             });
