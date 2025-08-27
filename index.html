@@ -90,6 +90,32 @@
         box-shadow: 0 0 8px #00c8ff44;
         margin-bottom: 5px;
       }
+     
+    /* Fade-in/out glass modal */
+    .glass-modal {
+      position: fixed;
+      bottom: 10px;
+      right: 450px;
+      display: none;
+      z-index: 9999;
+    }
+    .glass-modal.active {
+      display: block;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+     
     </style>
 </head>
 <body>
@@ -116,6 +142,13 @@
       </div>
     </div>
   </div>
+  
+    <div id="BUILDING_OVERVIEW" class="glass-modal">
+      <img src="https://lh3.googleusercontent.com/d/1sdr4eqjWoS3uhvOfdYQjUsRAbXImMHSY"
+           style="max-width:100%; height:auto; border-radius:16px;" />
+      <button class="close-btn" onclick="closeLogistics('BUILDING_OVERVIEW')">❌</button>
+    </div>
+
 
   <script>
     const iframe = document.getElementById('skfb-frame');
@@ -176,6 +209,7 @@
               if (!err && annotation?.name) {
                 CameraName = annotation.name;
                 document.getElementById('cameraNameBox').innerText = 'กล้อง ' + CameraName;
+                openLogistics('BUILDING_OVERVIEW');
                 getTextFromGoogleSheet(CameraName);
               }
             });
@@ -187,5 +221,18 @@
       }
     });
   </script>
+
+  <script>
+  function openLogistics(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.add("active");
+  }
+
+  function closeLogistics(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove("active");
+  } 
+  </script>
+  
 </body>
 </html>
