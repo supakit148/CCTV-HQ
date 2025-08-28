@@ -5,108 +5,122 @@
   <title>Smart City Dashboard</title>
   <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.0.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-    
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        font-family: 'Orbitron', sans-serif;
-        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-        color: #00ffff;
-        overflow: hidden;
-      }
-    
-      .container {
-        display: flex;
-        height: 100vh;
-      }
-    
-      .left-pane {
-        flex: 7.5;
-        position: relative;
-        background-color: #000;
-        border-right: 2px solid rgba(0, 255, 255, 0.2);
-        box-shadow: inset 0 0 30px #00eaff55;
-      }
-    
-      .right-pane {
-        flex: 2;
-        padding: 18px;
-        background: radial-gradient(circle, #0a1e2f, #06121f);
-        overflow-y: auto;
-        color: #c5faff;
-      }
-    
-      #skfb-frame {
-        width: 100%;
-        height: 100%;
-        border: none;
-        filter: drop-shadow(0 0 20px #00eaff);
-      }
-    
-      .camera-section {
-        margin-bottom: 12px;
-        padding-bottom: 10px;
-        border-bottom: 1px dashed rgba(0, 255, 255, 0.1);
-      }
-    
-      .camera-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #00ffff;
-        margin-bottom: 5px;
-        border-left: 4px solid #00eaff;
-        padding-left: 8px;
-      }
-    
-      .camera-image img {
-        display: block;              
-        margin-left: auto;         /
-        margin-right: auto;
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        border: 1px solid #00eaff;
-        box-shadow: 0 0 12px #00eaff66;
-        margin-bottom: 8px;
-        transition: transform 0.3s ease;
-      }
-    
-      .camera-image img:hover {
-        transform: scale(1.03);
-      }
-    
-      .camera-detail {
-        font-size: 14px;
-        background-color: rgba(0, 255, 255, 0.05);
-        border-left: 3px solid #00ffff;
-        padding: 10px;
-        border-radius: 5px;
-        line-height: 1.4;
-        box-shadow: 0 0 8px #00c8ff44;
-        margin-bottom: 5px;
-      }
-     
-    /* Fade-in/out glass modal */
-    .glass-modal {
-      position: fixed;
-      bottom: 10px;
-      right: 450px;
-      display: none;
-      z-index: 9999;
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #00ffff;
+      overflow: hidden;
     }
-    .glass-modal.active {
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-pane {
+      flex: 7.5;
+      position: relative;
+      background-color: #000;
+      border-right: 2px solid rgba(0, 255, 255, 0.2);
+      box-shadow: inset 0 0 30px #00eaff55;
+    }
+
+    .right-pane {
+      flex: 2;
+      padding: 18px;
+      background: radial-gradient(circle, #0a1e2f, #06121f);
+      overflow-y: auto;
+      color: #c5faff;
+    }
+
+    #skfb-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: drop-shadow(0 0 20px #00eaff);
+    }
+
+    .camera-section {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(0, 255, 255, 0.1);
+    }
+
+    .camera-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00ffff;
+      margin-bottom: 5px;
+      border-left: 4px solid #00eaff;
+      padding-left: 8px;
+    }
+
+    .camera-image img {
       display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #00eaff;
+      box-shadow: 0 0 12px #00eaff66;
+      margin-bottom: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .camera-image img:hover { transform: scale(1.03); }
+
+    .camera-detail {
+      font-size: 14px;
+      background-color: rgba(0, 255, 255, 0.05);
+      border-left: 3px solid #00ffff;
+      padding: 10px;
+      border-radius: 5px;
+      line-height: 1.4;
+      box-shadow: 0 0 8px #00c8ff44;
+      margin-bottom: 5px;
+    }
+
+    /* ====== Glass Modals (รวมสไตล์ให้สั้นลง) ====== */
+    .glass-modal-cctv {
+      position: fixed;
+      top: 260px;
+      display: none;          /* เริ่มซ่อน */
+      width: auto;
+      height: auto;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+      z-index: 9999;
+      overflow: hidden;       /* ป้องกันภาพล้น */
+      padding: 0;
+    }
+    .glass-modal-cctv.active { display: inline-block; }
+
+    /* ตำแหน่งแต่ละตัวด้วย ID */
+    #CCTV1 { right: 480px; }
+    #CCTV2 { right: 960px; }
+
+    .glass-modal-cctv img {
+      display: block;   /* ตัดช่องว่างใต้รูป */
+      width: 300px;     /* ล็อกกว้าง 300px */
+      height: auto;
+      border-radius: 0; /* ใช้โค้งจาก container */
     }
 
     .close-btn {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 8px;
+      right: 8px;
       background: #0ff;
       color: #000;
       border: none;
@@ -114,9 +128,11 @@
       font-weight: bold;
       padding: 8px 16px;
       cursor: pointer;
+      z-index: 2;
     }
-     
-    </style>
+
+    h3 { text-shadow: 0 0 8px #00ffff88; font-size: 18px; margin: 8px 12px; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -128,13 +144,13 @@
       <div class="camera-section">
         <div class="camera-title" id="cameraNameBox">📷 รอกด Annotation กล้อง...</div>
         <div class="camera-image" id="infoBox">ℹ️ ข้อมูลจาก Google Sheet จะแสดงตรงนี้</div>
-        <div class="camera-detail" id="infoBox2">ℹ️ ข้อมูลจาก Google Sheet จะแสดงตรงนี้</div>
       </div>
+
       <div class="camera-section">
         <div class="camera-title" id="Camera2">📷 กล้อง 2</div>
         <div class="camera-image" id="Picture2">ℹ️ ข้อมูลจาก Google Sheet จะแสดงตรงนี้</div>
-        <div class="camera-detail" id="Alarm2">ℹ️ ข้อมูลจาก Google Sheet จะแสดงตรงนี้</div>
       </div>
+
       <div class="camera-section">
         <div class="camera-title" id="Camera3">📷 กล้อง 3</div>
         <div class="camera-image" id="Picture3">ℹ️ ข้อมูลจาก Google Sheet จะแสดงตรงนี้</div>
@@ -142,14 +158,20 @@
       </div>
     </div>
   </div>
-  
-    <div id="BUILDING_OVERVIEW" class="glass-modal">
-      <img id="modalImg"
-           src=""
-           alt="ภาพจากกล้อง"
-           style="max-width:100%; height:auto; border-radius:16px;" />
-      <button class="close-btn" onclick="closeLogistics('BUILDING_OVERVIEW')">❌</button>
-    </div>
+
+  <!-- กล้อง 1 -->
+  <div id="CCTV1" class="glass-modal-cctv">
+    <img id="modalImg1" src="" alt="ภาพจากกล้อง 1" />
+    <h3 id="infoBox1">-</h3>
+    <button class="close-btn" onclick="closeLogistics('CCTV1')">❌</button>
+  </div>
+
+  <!-- กล้อง 2 -->
+  <div id="CCTV2" class="glass-modal-cctv">
+    <img id="modalImg2" src="" alt="ภาพจากกล้อง 2" />
+    <h3 id="Alarm2Box">-</h3>
+    <button class="close-btn" onclick="closeLogistics('CCTV2')">❌</button>
+  </div>
 
   <script>
     const iframe = document.getElementById('skfb-frame');
@@ -159,7 +181,7 @@
     function getTextFromGoogleSheet(cameraId) {
       const sheetID = "1t54gy28z2ytqaOrvMZIOWUUg3eVXndgGpi24veRmibU";
       const sheetName = "Dashbroad-HQ-Real-Picture(last)";
-      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
 
       fetch(url)
         .then(res => res.text())
@@ -172,49 +194,43 @@
             if (row[0] && row[0].v === cameraId) {
               // กล้อง 1
               const text1 = row[3]?.v || 'ไม่พบข้อมูล';
-              
-              
-              
-              const img1 = row[2]?.v || 'ไม่พบข้อมูล';
-              document.getElementById("infoBox").innerHTML = `<img src="${img1}" alt="ภาพจากกล้อง">`;
-              
-            // ✅ อัปเดตรูปในโมดอลให้ตรงกับ img1
-            const modalImg = document.getElementById("modalImg");
-            if (modalImg && img1) {
-              modalImg.src = img1;
-            
-              // (ออปชัน) ปรับขนาดกรอบโมดอลให้พอดีกับขนาดรูปจริง
-              // เมื่อรูปโหลดเสร็จ คำนวณขนาดจาก naturalWidth/Height
-              modalImg.onload = () => {
-                const wrap = document.getElementById("BUILDING_OVERVIEW");
-                if (!wrap) return;
-                // จำกัดความกว้าง/สูงไม่เกินขนาดจอ (เผื่อรูปใหญ่มาก)
-                const maxW = Math.min(modalImg.naturalWidth, window.innerWidth - 40);
-                const maxH = Math.min(modalImg.naturalHeight, window.innerHeight - 100);
-                wrap.style.width  = maxW + "px";
-                wrap.style.height = "auto";
-              };
-            }
-              
-              
-              document.getElementById("infoBox2").innerText = text1;
+              const img1  = row[2]?.v || '';
 
-              // กล้อง 2
-              const row2 = rows[i+1]?.c || [];
+              document.getElementById("infoBox").innerHTML = img1
+                ? `<img src="${img1}" alt="ภาพจากกล้อง">`
+                : 'ไม่พบข้อมูล';
+
+              const modalImg1 = document.getElementById("modalImg1");
+              if (modalImg1 && img1) modalImg1.src = img1;
+
+              document.getElementById("infoBox1").innerText = text1;
+
+              // กล้อง 2 (ถัดแถว)
+              const row2  = rows[i+1]?.c || [];
               const name2 = row2[0]?.v || 'ไม่พบข้อมูล';
-              const img2 = row2[2]?.v || 'ไม่พบข้อมูล';
+              const img2  = row2[2]?.v || '';
               const text2 = row2[3]?.v || 'ไม่พบข้อมูล';
-              document.getElementById("Camera2").innerText = 'กล้อง ' + name2;
-              document.getElementById("Picture2").innerHTML = `<img src="${img2}" alt="ภาพกล้อง 2">`;
-              document.getElementById("Alarm2").innerText = text2;
 
-              // กล้อง 3
-              const row3 = rows[i+2]?.c || [];
+              document.getElementById("Camera2").innerText = 'กล้อง ' + name2;
+              document.getElementById("Picture2").innerHTML = img2
+                ? `<img src="${img2}" alt="ภาพกล้อง 2">`
+                : 'ไม่พบข้อมูล';
+
+              const modalImg2 = document.getElementById("modalImg2");
+              if (modalImg2 && img2) modalImg2.src = img2;
+
+              document.getElementById("Alarm2Box").innerText = text2;
+
+              // กล้อง 3 (ถัดอีกแถว)
+              const row3  = rows[i+2]?.c || [];
               const name3 = row3[0]?.v || 'ไม่พบข้อมูล';
-              const img3 = row3[2]?.v || 'ไม่พบข้อมูล';
+              const img3  = row3[2]?.v || '';
               const text3 = row3[3]?.v || 'ไม่พบข้อมูล';
+
               document.getElementById("Camera3").innerText = 'กล้อง ' + name3;
-              document.getElementById("Picture3").innerHTML = `<img src="${img3}" alt="ภาพกล้อง 3">`;
+              document.getElementById("Picture3").innerHTML = img3
+                ? `<img src="${img3}" alt="ภาพกล้อง 3">`
+                : 'ไม่พบข้อมูล';
               document.getElementById("Alarm3").innerText = text3;
 
               break;
@@ -233,8 +249,15 @@
               if (!err && annotation?.name) {
                 CameraName = annotation.name;
                 document.getElementById('cameraNameBox').innerText = 'กล้อง ' + CameraName;
-                openLogistics('BUILDING_OVERVIEW');
-                
+
+                if (CameraName !== "BPS_HQ") {
+                  openLogistics('CCTV1');
+                  openLogistics('CCTV2');
+                } else {
+                  closeLogistics('CCTV1');
+                  closeLogistics('CCTV2');
+                }
+
                 getTextFromGoogleSheet(CameraName);
               }
             });
@@ -245,19 +268,16 @@
         console.error('❌ โหลด Sketchfab API ไม่ได้');
       }
     });
-  </script>
 
-  <script>
-  function openLogistics(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.classList.add("active");
-  }
+    function openLogistics(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add("active");
+    }
 
-  function closeLogistics(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.classList.remove("active");
-  } 
+    function closeLogistics(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove("active");
+    }
   </script>
-  
 </body>
 </html>
